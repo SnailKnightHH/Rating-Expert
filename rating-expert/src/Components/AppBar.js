@@ -10,7 +10,6 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 import { useState } from "react";
-import { Container } from "@mui/material";
 
 export default function ButtonAppBar({ children }) {
   const [loggedIn, setloggedIn] = useState(false);
@@ -82,7 +81,7 @@ export default function ButtonAppBar({ children }) {
         </AppBar>
         {renderMenu}
       </Box>
-      <Container>{children}</Container>
+      <Box m={5}>{children}</Box>
     </div>
   );
 }
