@@ -8,7 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 
 import React from "react";
-import Card from "../Components/card";
+import Card from "../Features/card";
 import Camera from "../Images/Camera.jpg";
 
 const useStyles = makeStyles({
