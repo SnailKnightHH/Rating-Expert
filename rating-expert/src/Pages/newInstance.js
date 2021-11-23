@@ -6,12 +6,19 @@ import {
   Box,
   Rating,
   Alert,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Autocomplete,
 } from "@mui/material";
 
 import { useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { createInstance } from "./instanceSlice";
+import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch } from "react-redux";
+import subCategories from "../subCategories";
+import regionArray from "../Features/regionArray";
 
 export default function AddInstancePage() {
   const [value, setValue] = useState(null);
@@ -19,6 +26,8 @@ export default function AddInstancePage() {
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [category, setCategory] = useState("");
 
   const instanceDraft = {
     id: "",
@@ -29,7 +38,7 @@ export default function AddInstancePage() {
     reason: "",
     category: params.category,
     sub_category: "",
-    country_of_origin: "",
+    place_of_origin: "",
     createDate: Date.now(),
     updateDate: null,
   };
@@ -49,15 +58,26 @@ export default function AddInstancePage() {
       setPublishWarning(false);
       dispatch(createInstance(draft));
       console.log("params.category", params.category);
+      // dispatch(changeStatusToIdle());
       history.push(`/main/${params.category}`);
-      console.log("reached");
+      console.log("publish successful", draft);
     }
   };
 
   const handleChange = (key) => (event) => {
     if (key === "rating") {
       setValue(event.target.value);
+      console.log("rating", event.target.value);
     }
+    if (key === "sub_category") {
+      setCategory(event.target.value);
+      setDraft({
+        ...draft,
+        [key]: subCategories[params.category][event.target.value],
+      });
+      return;
+    }
+
     setDraft({
       ...draft,
       [key]: event.target.value,
@@ -84,6 +104,22 @@ export default function AddInstancePage() {
           fullWidth
           onBlur={handleChange("name")}
         />
+      </Box>
+      <Box sx={{ width: 1 / 4 }} marginBottom={3}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Category</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={category}
+            label="category"
+            onChange={handleChange("sub_category")}
+          >
+            {subCategories[params.category].map((instance, index) => (
+              <MenuItem value={index}>{instance}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
       <Box
         marginTop={1}
@@ -141,7 +177,42 @@ export default function AddInstancePage() {
           onBlur={handleChange("reason")}
         />
       </Box>
-
+      <Box marginTop={6}>
+        <Autocomplete
+          id="region-select-demo"
+          sx={{ width: 300 }}
+          options={regionArray}
+          autoHighlight
+          getOptionLabel={(option) => option.label}
+          renderOption={(props, option) => (
+            <Box
+              component="li"
+              sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+              {...props}
+            >
+              <img
+                loading="lazy"
+                width="20"
+                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                alt=""
+              />
+              {option.label} ({option.code}) +{option.phone}
+            </Box>
+          )}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Choose a region"
+              onChange={handleChange("place_of_origin")}
+              inputProps={{
+                ...params.inputProps,
+                autoComplete: "new-password", // disable autocomplete and autofill
+              }}
+            />
+          )}
+        />
+      </Box>
       <Grid
         container
         spacing={3}

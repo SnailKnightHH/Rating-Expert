@@ -28,15 +28,32 @@ export const createInstance = createAsyncThunk(
   "instances/createInstance",
   async (instance) => {
     console.log("in createInstance");
-    await axios.post("/main/:Category/createInstance", { ...instance });
+    await axios.post("http://localhost:3001/main/:Category/createInstance", {
+      ...instance,
+    });
     return instance;
+  }
+);
+
+export const fetchAllInstances = createAsyncThunk(
+  "instances/createInstance",
+  async ({ userId }) => {
+    console.log("in createInstance");
+    const resp = await axios.get("http://localhost:3001/main/:Category", {
+      params: { userId },
+    });
+    return { instances: resp.data };
   }
 );
 
 const instancesSlice = createSlice({
   name: "instances",
   initialState,
-  reducers: {},
+  reducers: {
+    changeStatusToIdle(state, action) {
+      state.status = "idle";
+    },
+  },
   extraReducers: {
     [createInstance.pending]: (state) => {
       state.status = "pending";
@@ -47,6 +64,24 @@ const instancesSlice = createSlice({
       instancesAdapter.upsertOne(state, instance);
       state.status = "succeeded";
     },
+    [fetchAllInstances.pending]: (state) => {
+      state.status = "pending";
+    },
+    [fetchAllInstances.rejected]: (state, action) =>
+      errorReponse(state, action),
+    [fetchAllInstances.fulfilled]: (state, action) => {
+      if (action.payload) {
+        const { instances } = action.payload;
+        if (instances != null) {
+          instancesAdapter.setAll(state, instances);
+          state.status = "succeeded";
+          // window.location.reload(false);
+        }
+      } else {
+        state.error = "Error Retrieving instances: received null value";
+        state.status = "failed";
+      }
+    },
   },
 });
 
@@ -56,6 +91,6 @@ export const {
   selectIds: getInstanceIdsArray,
 } = instancesAdapter.getSelectors((state) => state.instances);
 
-// export const { actions } = instancesSlice.actions;
+export const { changeStatusToIdle } = instancesSlice.actions;
 
 export default instancesSlice.reducer;
