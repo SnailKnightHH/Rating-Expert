@@ -58,7 +58,7 @@ export default function AddInstancePage() {
       setPublishWarning(false);
       dispatch(createInstance(draft));
       console.log("params.category", params.category);
-      // dispatch(changeStatusToIdle());
+      dispatch(changeStatusToIdle());
       history.push(`/main/${params.category}`);
       console.log("publish successful", draft);
     }

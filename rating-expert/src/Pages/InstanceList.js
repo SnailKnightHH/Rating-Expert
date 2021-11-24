@@ -70,9 +70,8 @@ export default function InstanceList() {
   useEffect(() => {
     if (instancesStatus === "idle") {
       dispatch(fetchAllInstances("1")); // temp user id
-      // history.go(0);
     }
-  }, [instancesStatus, dispatch]);
+  }, [instancesStatus, allInstances, dispatch]);
 
   const InstancesList = () => {
     console.log("allInstances", allInstances);
