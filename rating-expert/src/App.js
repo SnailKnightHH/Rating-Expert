@@ -4,6 +4,7 @@ import InstanceList from "./Pages/InstanceList";
 import { Route, Switch, Redirect } from "react-router-dom";
 import AddInstancePage from "./Pages/newInstance";
 import { Typography } from "@mui/material";
+import InstanceDetail from "./Pages/instanceDetail";
 
 function App() {
   return (
@@ -21,8 +22,11 @@ function App() {
         {/* <Route path="/main/:category/:instance" exact>
           <DetailPage />
         </Route> */}
-        <Route path="/main/:category/Create">
+        <Route path="/main/:category/Create" exact>
           <AddInstancePage />
+        </Route>
+        <Route path="/main/:category/:name">
+          <InstanceDetail />
         </Route>
         <Route path="*">
           <Typography>404 Page not found</Typography>

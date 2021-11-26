@@ -18,9 +18,9 @@ import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch } from "react-redux";
 import subCategories from "../subCategories";
-import regionArray from "../Features/regionArray";
 
 export default function AddInstancePage() {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
   const params = useParams();
@@ -39,8 +39,7 @@ export default function AddInstancePage() {
     category: params.category,
     sub_category: "",
     place_of_origin: "",
-    createDate: Date.now(),
-    updateDate: null,
+    Date: currentDate,
   };
 
   const [draft, setDraft] = useState(instanceDraft);
@@ -64,10 +63,14 @@ export default function AddInstancePage() {
     }
   };
 
+  const DateConversion = (DateParam) => {
+    const [year, month, day] = DateParam.split("-");
+    return new Date(`${month} ${day}, ${year} 00:00:00`);
+  };
+
   const handleChange = (key) => (event) => {
     if (key === "rating") {
       setValue(event.target.value);
-      console.log("rating", event.target.value);
     }
     if (key === "sub_category") {
       setCategory(event.target.value);
@@ -77,11 +80,25 @@ export default function AddInstancePage() {
       });
       return;
     }
+    if (key === "Date") {
+      console.log(event.target.value);
+      const formattedDate = DateConversion(event.target.value);
+      setCurrentDate(formattedDate);
+      setDraft({
+        ...draft,
+        [key]: formattedDate,
+      });
+      return;
+    }
 
     setDraft({
       ...draft,
       [key]: event.target.value,
     });
+  };
+
+  const Back = () => {
+    history.push(`/main/${params.category}`);
   };
 
   return (
@@ -178,39 +195,12 @@ export default function AddInstancePage() {
         />
       </Box>
       <Box marginTop={6}>
-        <Autocomplete
-          id="region-select-demo"
-          sx={{ width: 300 }}
-          options={regionArray}
-          autoHighlight
-          getOptionLabel={(option) => option.label}
-          renderOption={(props, option) => (
-            <Box
-              component="li"
-              sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-              {...props}
-            >
-              <img
-                loading="lazy"
-                width="20"
-                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                alt=""
-              />
-              {option.label} ({option.code}) +{option.phone}
-            </Box>
-          )}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Choose a region"
-              onChange={handleChange("place_of_origin")}
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: "new-password", // disable autocomplete and autofill
-              }}
-            />
-          )}
+        <TextField
+          id="Instance Publish Date"
+          label="Date"
+          type="date"
+          value={currentDate.toISOString().split("T")[0]}
+          onChange={handleChange("Date")}
         />
       </Box>
       <Grid
@@ -221,7 +211,9 @@ export default function AddInstancePage() {
         marginTop={3}
       >
         <Grid item>
-          <Button variant="contained">Back</Button>
+          <Button variant="contained" onClick={Back}>
+            Back
+          </Button>
         </Grid>
         <Grid item>
           <Button variant="contained" onClick={publishInstance}>
