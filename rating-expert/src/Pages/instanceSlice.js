@@ -30,7 +30,7 @@ export const createInstance = createAsyncThunk(
   "instances/createInstance",
   async (instance) => {
     console.log("in createInstance");
-    await axios.post(`${baseURL}/:Category/createInstance`, {
+    await axios.post(`${baseURL}/:category/createInstance`, {
       ...instance,
     });
     return instance;
@@ -41,7 +41,7 @@ export const fetchAllInstances = createAsyncThunk(
   "instances/fetchAllInstances",
   async (userId) => {
     console.log("in fetchAllInstances");
-    const resp = await axios.get(`${baseURL}/:Category`, {
+    const resp = await axios.get(`${baseURL}/:category`, {
       params: { userId },
     });
     return { instances: resp.data };

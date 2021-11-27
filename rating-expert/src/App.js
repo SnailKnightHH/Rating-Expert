@@ -25,7 +25,7 @@ function App() {
         <Route path="/main/:category/Create" exact>
           <AddInstancePage />
         </Route>
-        <Route path="/main/:category/:name">
+        <Route path="/main/:category/:name" exact>
           <InstanceDetail />
         </Route>
         <Route path="*">

@@ -38,8 +38,7 @@ export default function AddInstancePage() {
     reason: "",
     category: params.category,
     sub_category: "",
-    place_of_origin: "",
-    Date: currentDate,
+    date: currentDate,
   };
 
   const [draft, setDraft] = useState(instanceDraft);
@@ -65,7 +64,10 @@ export default function AddInstancePage() {
 
   const DateConversion = (DateParam) => {
     const [year, month, day] = DateParam.split("-");
-    return new Date(`${month} ${day}, ${year} 00:00:00`);
+    const ISODate = new Date(`${month} ${day}, ${year} 00:00:00`);
+    setCurrentDate(ISODate);
+    console.log("Date.parse(ISODate)", Date.parse(ISODate));
+    return Date.parse(ISODate); // must be serializable 
   };
 
   const handleChange = (key) => (event) => {
@@ -83,7 +85,7 @@ export default function AddInstancePage() {
     if (key === "Date") {
       console.log(event.target.value);
       const formattedDate = DateConversion(event.target.value);
-      setCurrentDate(formattedDate);
+      console.log("formattedDate", formattedDate);
       setDraft({
         ...draft,
         [key]: formattedDate,
