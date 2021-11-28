@@ -147,6 +147,10 @@ export default function InstanceList() {
     setPage(newPage);
   };
 
+  const backToMain = () => {
+    history.push("/main");
+  };
+
   const InstancesList = () => {
     console.log("allInstances", allInstances);
     if (viewMode === "Grid") {
@@ -154,6 +158,7 @@ export default function InstanceList() {
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
           <Card>
             <CardActionArea
+              sx={{ minHeight: "8rem" }}
               component={Link}
               to={`/main/${params.category}/${instance.name}`}
             >
@@ -242,7 +247,7 @@ export default function InstanceList() {
 
   return (
     <Fragment>
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid item xs={4}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Category</InputLabel>
@@ -288,6 +293,11 @@ export default function InstanceList() {
               <FormatListBulletedIcon /> {/* List View*/}
             </ToggleButton>
           </ToggleButtonGroup>
+        </Grid>
+        <Grid item marginTop={0.5}>
+          <Button variant="contained" onClick={backToMain}>
+            Back
+          </Button>
         </Grid>
         <Grid item marginTop={0.5}>
           <Button variant="contained" onClick={createInstance}>

@@ -1,4 +1,12 @@
-import { Typography, Grid, Button, Box, LinearProgress } from "@mui/material";
+import {
+  Typography,
+  Grid,
+  Button,
+  Box,
+  LinearProgress,
+  Paper,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import { useParams } from "react-router";
 import { useHistory } from "react-router";
@@ -6,7 +14,65 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { baseURL } from "./instanceSlice";
 
+const useStyles = makeStyles({
+  title: {
+    marginTop: 24,
+    marginBottom: 24,
+    fontSize: 40,
+  },
+  category: {
+    marginBottom: 24,
+    fontSize: 24,
+  },
+  paperGreen: {
+    backgroundColor: "#3dcc54",
+  },
+  paperYellow: {
+    backgroundColor: "#f1cc24",
+  },
+  PaperRed: {
+    backgroundColor: "#f14624",
+  },
+  rating: {
+    color: "white",
+    textAlign: "center",
+    lineHeight: "240%",
+    fontSize: "2rem",
+  },
+  back: {
+    marginTop: "3rem",
+  },
+  descriptionAndReasons: {
+    maxWidth: "60%",
+  },
+});
+
 export default function InstanceDetail() {
+  const classes = useStyles();
+
+  const customPaper = (rating) => {
+    return (
+      <Paper
+        className={
+          rating >= 7
+            ? classes.paperGreen
+            : rating >= 5
+            ? classes.paperYellow
+            : classes.PaperRed
+        }
+        elevation={0}
+        sx={{
+          minWidth: "5rem",
+          minHeight: "5rem",
+          marginTop: "1.5rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <Typography className={classes.rating}>{rating}</Typography>
+      </Paper>
+    );
+  };
+
   const paramsHook = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
@@ -43,13 +109,25 @@ export default function InstanceDetail() {
         alignItems="center"
         justifyContent="center"
       >
-        <Typography>{instanceInfo.name}</Typography>
-        <Typography>{instanceInfo.category}</Typography>
+        <Typography className={classes.title}>{instanceInfo.name}</Typography>
+        <Typography className={classes.category}>
+          {instanceInfo.category}
+        </Typography>
         <Typography>{instanceInfo.date.split("T")[0]}</Typography>
-        <Typography>{instanceInfo.rating}</Typography>
-        <Typography>{instanceInfo.description}</Typography>
-        <Typography>{instanceInfo.reason}</Typography>
-        <Button variant="contained" onClick={Back}>
+        {customPaper(instanceInfo.rating)}
+        <Box display="flex" justifyContent="center" marginTop="2.5rem">
+          <Typography>{"Description: "}</Typography>
+        </Box>
+        <Typography className={classes.descriptionAndReasons}>
+          {instanceInfo.description}
+        </Typography>
+        <Box display="flex" justifyContent="center" marginTop="2.5rem">
+          <Typography>{"Reason: "}</Typography>
+        </Box>
+        <Typography className={classes.descriptionAndReasons}>
+          {instanceInfo.reason}
+        </Typography>
+        <Button variant="contained" className={classes.back} onClick={Back}>
           Back
         </Button>
       </Grid>
