@@ -60,7 +60,8 @@ export default function InstanceList() {
   const [viewMode, setViewMode] = useState("Grid");
 
   const handleViewModeChange = (event, newViewMode) => {
-    setViewMode(newViewMode);
+    // press same button twice somehow will result in hull
+    if (newViewMode !== null) setViewMode(newViewMode);
   };
 
   const createInstance = () => {
@@ -205,11 +206,19 @@ export default function InstanceList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Button> {listNum}</Button>
+                      <Button
+                        component={Link}
+                        to={`/main/${params.category}/${row.name}`}
+                      >
+                        {" "}
+                        {listNum}
+                      </Button>
                     </TableCell>
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.description}</TableCell>
-                    <TableCell align="right">{row.date}</TableCell>
+                    <TableCell align="right">
+                      {row.date.split("T")[0]}
+                    </TableCell>
                     <TableCell align="right">{row.rating}</TableCell>
                   </TableRow>
                 );
