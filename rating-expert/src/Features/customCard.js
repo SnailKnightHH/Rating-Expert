@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function card({ img, title, altText }) {
+export default function customCard({ img, title, altText }) {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea component={Link} to={`/main/${title}`}>

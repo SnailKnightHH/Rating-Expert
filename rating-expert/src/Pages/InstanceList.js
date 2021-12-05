@@ -38,7 +38,7 @@ import { useTheme } from "@mui/material/styles";
 
 import { useParams, useHistory } from "react-router";
 import { useState, useEffect, Fragment } from "react";
-import subCategories from "../subCategories";
+import subCategories from "../Constants/subCategories";
 import { selectAllInstances, fetchAllInstances } from "./instanceSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -47,15 +47,32 @@ export default function InstanceList() {
   const params = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const allInstances = useSelector(selectAllInstances).filter(
-    (instance) => instance.category === params.category
-  );
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(0);
+  const instanceSubCategory = subCategories[params.category];
 
-  const handleChange = (event) => {
+  const handleSubCategoryChange = (event) => {
     setCategory(event.target.value);
   };
+
+  const [query, setQuery] = useState("");
+  const handleSearchQuery = (event) => {
+    setQuery(event.target.value);
+  };
+
+  const allInstances = useSelector(selectAllInstances)
+    .filter((instance) => instance.category === params.category) // categories filter
+    .filter((instance) => {
+      // sub categories filter
+      if (instanceSubCategory[category] === "All") return true;
+      else return instance.sub_category === instanceSubCategory[category];
+    })
+    .filter((instance) => {
+      // search query filter
+      if (query.trim() === "") return true;
+      else
+        return instance.name.toLowerCase().includes(query.trim().toLowerCase());
+    });
 
   const [viewMode, setViewMode] = useState("Grid");
 
@@ -71,9 +88,12 @@ export default function InstanceList() {
   const instancesStatus = useSelector((state) => state.instances.status);
 
   useEffect(() => {
+    console.log("instancesStatus", instancesStatus);
     if (instancesStatus === "idle") {
       dispatch(fetchAllInstances("1")); // temp user id
     }
+
+    console.log("use effect", allInstances);
   }, [instancesStatus, allInstances, dispatch]);
 
   function TablePaginationActions(props) {
@@ -264,12 +284,12 @@ export default function InstanceList() {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={category}
+              displayEmpty={true}
               label="category"
-              onChange={handleChange}
+              onChange={handleSubCategoryChange}
             >
-              {console.log("instanceList", params.category)}
-              {subCategories[params.category].map((instance, index) => (
-                <MenuItem value={index * 10}>{instance}</MenuItem>
+              {instanceSubCategory.map((instance, index) => (
+                <MenuItem value={index}>{instance}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -285,6 +305,7 @@ export default function InstanceList() {
                 </InputAdornment>
               ),
             }}
+            onChange={handleSearchQuery}
             variant="outlined"
           />
         </Grid>
@@ -315,7 +336,12 @@ export default function InstanceList() {
         </Grid>
       </Grid>
       <Grid container spacing={3} marginTop={3}>
-        <InstancesList />
+        {allInstances.length === 0 && (
+          <Typography sx={{ margin: "2rem" }}>
+            There are no {params.category} available.
+          </Typography>
+        )}
+        {allInstances.length !== 0 && <InstancesList />}
       </Grid>
     </Fragment>
   );

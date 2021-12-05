@@ -5,34 +5,41 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import AddInstancePage from "./Pages/newInstance";
 import { Typography } from "@mui/material";
 import InstanceDetail from "./Pages/instanceDetail";
+import LoginPage from "./Pages/loginPage";
+import { ProvideAuth } from "./Features/userAuth";
 
 function App() {
   return (
-    <AppBar>
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/main" />
-        </Route>
-        <Route path="/main" exact>
-          <MainPage />
-        </Route>
-        <Route path="/main/:category" exact>
-          <InstanceList />
-        </Route>
-        {/* <Route path="/main/:category/:instance" exact>
+    <ProvideAuth>
+      <AppBar>
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/main" />
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/main" exact>
+            <MainPage />
+          </Route>
+          <Route path="/main/:category" exact>
+            <InstanceList />
+          </Route>
+          {/* <Route path="/main/:category/:instance" exact>
           <DetailPage />
         </Route> */}
-        <Route path="/main/:category/Create" exact>
-          <AddInstancePage />
-        </Route>
-        <Route path="/main/:category/:name" exact>
-          <InstanceDetail />
-        </Route>
-        <Route path="*">
-          <Typography>404 Page not found</Typography>
-        </Route>
-      </Switch>
-    </AppBar>
+          <Route path="/main/:category/Create" exact>
+            <AddInstancePage />
+          </Route>
+          <Route path="/main/:category/:name" exact>
+            <InstanceDetail />
+          </Route>
+          <Route path="*">
+            <Typography>404 Page not found</Typography>
+          </Route>
+        </Switch>
+      </AppBar>
+    </ProvideAuth>
   );
 }
 

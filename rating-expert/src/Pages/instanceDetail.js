@@ -12,7 +12,7 @@ import { useParams } from "react-router";
 import { useHistory } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { baseURL } from "./instanceSlice";
+import { baseURL } from "../Constants/constants";
 
 const useStyles = makeStyles({
   title: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     marginBottom: 24,
     fontSize: 40,
   },
-  category: {
+  sub_category: {
     marginBottom: 24,
     fontSize: 24,
   },
@@ -79,7 +79,7 @@ export default function InstanceDetail() {
   const [instanceInfo, setInstanceInfo] = useState(null);
 
   useEffect(async () => {
-    const resourcePath = `${baseURL}/:category/${paramsHook.name}`;
+    const resourcePath = `${baseURL}/main/:category/${paramsHook.name}`;
     const resp = await axios.get(resourcePath, {
       params: { name: paramsHook.name },
     });
@@ -110,8 +110,8 @@ export default function InstanceDetail() {
         justifyContent="center"
       >
         <Typography className={classes.title}>{instanceInfo.name}</Typography>
-        <Typography className={classes.category}>
-          {instanceInfo.category}
+        <Typography className={classes.sub_category}>
+          {instanceInfo.sub_category}
         </Typography>
         <Typography>{instanceInfo.date.split("T")[0]}</Typography>
         {customPaper(instanceInfo.rating)}

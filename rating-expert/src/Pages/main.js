@@ -7,9 +7,10 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 
-import React from "react";
-import Card from "../Features/card";
+import React, { useState } from "react";
+import CustomCard from "../Features/customCard";
 import Camera from "../Images/Camera.jpg";
+import Gaming from "../Images/Gaming.jpg";
 
 const useStyles = makeStyles({
   title: {
@@ -21,6 +22,26 @@ const useStyles = makeStyles({
 
 export default function MainPage() {
   const classes = useStyles();
+  const [query, setQuery] = useState("");
+
+  const handleSearchQuery = (event) => {
+    setQuery(event.target.value);
+  };
+
+  const allCategories = [
+    {
+      title: "Movies",
+      img: Camera,
+    },
+    {
+      title: "Games",
+      img: Gaming,
+    },
+  ].filter((category) => {
+    if (query.trim() === "") return true;
+    else
+      return category.title.toLowerCase().includes(query.trim().toLowerCase());
+  });
 
   return (
     <React.Fragment>
@@ -44,6 +65,7 @@ export default function MainPage() {
             sx={{ ml: 1, flex: 1 }}
             placeholder="Search Category"
             inputProps={{ "aria-label": "search Category" }}
+            onChange={handleSearchQuery}
           />
           <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
             <SearchIcon />
@@ -51,30 +73,15 @@ export default function MainPage() {
         </Paper>
       </Box>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-          <Card img={Camera} title={"Movies"} altText="Camera" />
-        </Grid>
+        {allCategories.map((category) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <CustomCard
+              img={category.img}
+              title={category.title}
+              altText={category.title}
+            />
+          </Grid>
+        ))}
       </Grid>
     </React.Fragment>
   );

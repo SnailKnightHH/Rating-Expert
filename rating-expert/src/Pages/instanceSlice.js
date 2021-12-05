@@ -4,8 +4,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-
-export const baseURL = "http://localhost:3001/main";
+import { baseURL } from "../Constants/constants";
 
 const errorReponse = (state, action) => {
   state.status = "failed";
@@ -30,7 +29,7 @@ export const createInstance = createAsyncThunk(
   "instances/createInstance",
   async (instance) => {
     console.log("in createInstance");
-    await axios.post(`${baseURL}/:category/createInstance`, {
+    await axios.post(`${baseURL}/main/:category/createInstance`, {
       ...instance,
     });
     return instance;
@@ -41,7 +40,7 @@ export const fetchAllInstances = createAsyncThunk(
   "instances/fetchAllInstances",
   async (userId) => {
     console.log("in fetchAllInstances");
-    const resp = await axios.get(`${baseURL}/:category`, {
+    const resp = await axios.get(`${baseURL}/main/:category`, {
       params: { userId },
     });
     return { instances: resp.data };

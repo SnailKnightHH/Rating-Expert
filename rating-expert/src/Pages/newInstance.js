@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch } from "react-redux";
-import subCategories from "../subCategories";
+import subCategories from "../Constants/subCategories";
 
 export default function AddInstancePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -67,7 +67,7 @@ export default function AddInstancePage() {
     const ISODate = new Date(`${month} ${day}, ${year} 00:00:00`);
     setCurrentDate(ISODate);
     console.log("Date.parse(ISODate)", Date.parse(ISODate));
-    return Date.parse(ISODate); // must be serializable 
+    return Date.parse(ISODate); // must be serializable
   };
 
   const handleChange = (key) => (event) => {
