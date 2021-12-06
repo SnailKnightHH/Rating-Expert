@@ -47,6 +47,7 @@ export default function InstanceList() {
   const params = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
+  const loggedIn = useSelector((state) => state.user.loggedIn);
 
   const [category, setCategory] = useState(0);
   const instanceSubCategory = subCategories[params.category];
@@ -330,7 +331,11 @@ export default function InstanceList() {
           </Button>
         </Grid>
         <Grid item marginTop={0.5}>
-          <Button variant="contained" onClick={createInstance}>
+          <Button
+            variant="contained"
+            onClick={createInstance}
+            disabled={!loggedIn}
+          >
             Create
           </Button>
         </Grid>

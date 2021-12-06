@@ -5,7 +5,6 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import AddInstancePage from "./Pages/newInstance";
 import { Typography } from "@mui/material";
 import InstanceDetail from "./Pages/instanceDetail";
-import LoginPage from "./Pages/loginPage";
 import { ProvideAuth } from "./Features/userAuth";
 
 function App() {
@@ -15,9 +14,6 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <Redirect to="/main" />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
           </Route>
           <Route path="/main" exact>
             <MainPage />
