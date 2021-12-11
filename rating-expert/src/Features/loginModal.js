@@ -20,7 +20,6 @@ import { useDispatch } from "react-redux";
 import { useState, Fragment } from "react";
 import { useAuth } from "./userAuth";
 import { signInUser } from "../Pages/userSlice";
-import { useHistory } from "react-router";
 
 const style = {
   position: "absolute",
@@ -35,11 +34,11 @@ const style = {
 };
 
 export default function LoginModal({ open, handleClose }) {
-  const history = useHistory();
   const [isSignUp, SetIsSignUp] = useState(false);
   const toggleSignUpPage = (event) => {
     event.preventDefault(); // not working?
     SetIsSignUp((prev) => SetIsSignUp(!prev));
+    setValid(true);
   };
 
   const [values, setValues] = useState({
@@ -156,18 +155,14 @@ export default function LoginModal({ open, handleClose }) {
               rowSpacing={5}
             >
               <Grid item>
-                {isSignUp ? (
-                  <Typography>Sign Up</Typography>
-                ) : (
-                  <Typography variant="h1" align="center">
-                    Rating Expert
-                  </Typography>
-                )}
+                <Typography variant="h1" align="center" fontSize="3rem">
+                  {isSignUp ? "Sign Up" : "Rating Expert"}
+                </Typography>
               </Grid>
               {!valid && !isSignUp && (
                 <Alert severity="error">
-                  The email or password you entered is not correct. Please
-                  double-check and try again.
+                  The email or password you entered is do not match our record.
+                  Please double-check and try again.
                 </Alert>
               )}
               <Grid item>

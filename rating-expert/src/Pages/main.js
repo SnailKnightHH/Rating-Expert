@@ -67,7 +67,7 @@ export default function MainPage() {
             inputProps={{ "aria-label": "search Category" }}
             onChange={handleSearchQuery}
           />
-          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+          <IconButton sx={{ p: "10px" }} aria-label="search">
             <SearchIcon />
           </IconButton>
         </Paper>

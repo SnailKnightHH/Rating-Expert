@@ -28,7 +28,10 @@ function useProvideAuth() {
     const resp = await axios.post(`${baseURL}/signup`, { email, password });
     return resp;
   };
-  const signout = () => {};
+  const signOut = async () => {
+    const resp = await axios.post(`${baseURL}/logout`);
+    return resp;
+  };
 
   // Subscribe to user on mount
   // Because this sets state in the callback it will cause any ...
@@ -40,7 +43,7 @@ function useProvideAuth() {
     user,
     signIn,
     signUp,
-    signout,
+    signOut,
     // sendPasswordResetEmail,
     // confirmPasswordReset,
   };

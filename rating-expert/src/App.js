@@ -6,6 +6,7 @@ import AddInstancePage from "./Pages/newInstance";
 import { Typography } from "@mui/material";
 import InstanceDetail from "./Pages/instanceDetail";
 import { ProvideAuth } from "./Features/userAuth";
+import Profile from "./Pages/profile";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           </Route>
           <Route path="/main" exact>
             <MainPage />
+          </Route>
+          <Route path="/main/profile">
+            <Profile />
           </Route>
           <Route path="/main/:category" exact>
             <InstanceList />

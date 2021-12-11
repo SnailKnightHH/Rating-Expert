@@ -14,6 +14,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import LoginModal from "./loginModal";
+import { useAuth } from "./userAuth";
+import { useHistory } from "react-router";
 
 const style = {
   position: "absolute",
@@ -34,6 +36,34 @@ export default function ButtonAppBar({ children }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const auth = useAuth();
+
+  const history = useHistory();
+  const goToProfile = () => {
+    history.push(`/main/profile`);
+  };
+  const goToMain = () => {
+    history.push(`/main`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const resp = await auth.signOut();
+      // console.log(resp);
+      // if (resp.data) {
+      //   dispatch(signInUser(resp.data));
+      //   setSnackBarSeverity("success");
+      //   setSnackBarMessage("Welcome Back rating expert!");
+      //   setOpenSnackBar(true);
+      //   handleClose();
+      // } else {
+      //   setValid(false);
+      // }
+    } catch (err) {
+      // setValid(false);
+    }
+  };
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -64,13 +94,9 @@ export default function ButtonAppBar({ children }) {
       onClose={handleProfileMenuClose}
     >
       {!loggedIn && <MenuItem onClick={handleOpen}>Login</MenuItem>}
-      {loggedIn && (
-        <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-      )}
-      {loggedIn && (
-        <MenuItem onClick={handleProfileMenuClose}>My account</MenuItem>
-      )}
-      {loggedIn && <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>}
+      {loggedIn && <MenuItem onClick={goToProfile}>Profile</MenuItem>}
+      {loggedIn && <MenuItem onClick={goToMain}>Main</MenuItem>}
+      {loggedIn && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
     </Menu>
   );
 

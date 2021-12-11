@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import subCategories from "../Constants/subCategories";
 
 export default function AddInstancePage() {
@@ -26,6 +26,8 @@ export default function AddInstancePage() {
   const params = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const user = useSelector((state) => state.user.user);
 
   const [category, setCategory] = useState("");
 
@@ -39,6 +41,7 @@ export default function AddInstancePage() {
     category: params.category,
     sub_category: "",
     date: currentDate,
+    user,
   };
 
   const [draft, setDraft] = useState(instanceDraft);
@@ -55,7 +58,7 @@ export default function AddInstancePage() {
     } else {
       setPublishWarning(false);
       dispatch(createInstance(draft));
-      console.log("params.category", params.category);
+
       dispatch(changeStatusToIdle());
       history.push(`/main/${params.category}`);
       console.log("publish successful", draft);

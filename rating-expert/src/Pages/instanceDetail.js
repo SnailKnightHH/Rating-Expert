@@ -92,7 +92,7 @@ export default function InstanceDetail() {
   }, []);
 
   const Back = () => {
-    history.push(`/main/${paramsHook.category}`);
+    history.goBack();
   };
 
   if (isLoading) {

@@ -21,6 +21,7 @@ import {
   ToggleButtonGroup,
   IconButton,
   Box,
+  Tooltip,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -331,13 +332,20 @@ export default function InstanceList() {
           </Button>
         </Grid>
         <Grid item marginTop={0.5}>
-          <Button
-            variant="contained"
-            onClick={createInstance}
-            disabled={!loggedIn}
-          >
-            Create
-          </Button>
+          {loggedIn && (
+            <Button variant="contained" onClick={createInstance}>
+              Create
+            </Button>
+          )}
+          {!loggedIn && (
+            <Tooltip title="Login to create ratings">
+              <span>
+                <Button variant="contained" disabled>
+                  Create
+                </Button>
+              </span>
+            </Tooltip>
+          )}
         </Grid>
       </Grid>
       <Grid container spacing={3} marginTop={3}>
