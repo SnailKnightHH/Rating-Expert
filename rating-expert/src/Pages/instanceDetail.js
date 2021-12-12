@@ -21,6 +21,7 @@ import { baseURL } from "../Constants/constants";
 import Comment from "../Features/comment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useDispatch, useSelector } from "react-redux";
+import { CommentRounded } from "@mui/icons-material";
 
 const useStyles = makeStyles({
   title: {
@@ -93,20 +94,10 @@ export default function InstanceDetail() {
   };
 
   const calculateRating = () => {
-    console.log(
-      instanceInfo.comments.reduce((prev, cur) => {
-        console.log(prev.rating, cur.rating);
-        return prev.rating + cur.rating;
-      }, 0),
-      instanceInfo.comments.length + 1
-    );
     return roundTo2DecimalPlaces(
       (instanceInfo.rating +
         (instanceInfo.comments.length !== 0
-          ? instanceInfo.comments.reduce(
-              (prev, cur) => prev.rating + cur.rating,
-              0
-            )
+          ? instanceInfo.comments.reduce((prev, cur) => prev + cur.rating, 0)
           : 0)) /
         (instanceInfo.comments.length + 1)
     );
@@ -117,7 +108,7 @@ export default function InstanceDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [instanceInfo, setInstanceInfo] = useState(null);
 
-  useEffect(async () => {
+  const fetchInstance = async () => {
     const resourcePath = `${baseURL}/main/:category/${paramsHook.name}`;
     const resp = await axios.get(resourcePath, {
       params: { name: paramsHook.name },
@@ -128,19 +119,28 @@ export default function InstanceDetail() {
       setIsLoading(false);
     }
     console.log("instanceInfo", resp.data);
+  };
+
+  useEffect(() => {
+    fetchInstance();
   }, []);
 
   const Back = () => {
     history.goBack();
   };
 
+  const [commentRating, setCommentRating] = useState("");
+
   const addComment = async (comment, email, name, rating) => {
-    await axios.post(`${baseURL}/main/:category/createComment`, {
+    const resp = await axios.post(`${baseURL}/main/:category/createComment`, {
       params: { comment, email, name, rating },
     });
+    console.log("before adding comment", resp);
+    await fetchInstance();
+    console.log("end of adding comment");
+    setCommentRating("");
+    setComment("");
   };
-
-  const [commentRating, setCommentRating] = useState("");
 
   const handleChange = (event) => {
     setCommentRating(event.target.value);
@@ -217,11 +217,11 @@ export default function InstanceDetail() {
               <TextField
                 id="add-comment"
                 label="Add a public comment..."
-                placeholder="Placeholder"
                 multiline
                 variant="standard"
                 fullWidth
                 onChange={changeComment}
+                value={comment}
               />
             </Grid>
             <Grid item xs={2}>
@@ -273,6 +273,7 @@ export default function InstanceDetail() {
         </Paper>
         {instanceInfo.comments.map((comment) => (
           <Comment
+            key={comment.email + comment.date}
             Email={comment.email}
             Reason={comment.reason}
             Rating={comment.rating}

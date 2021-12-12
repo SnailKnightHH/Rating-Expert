@@ -66,7 +66,7 @@ export default function LoginModal({ open, handleClose }) {
   };
 
   const [openSnackBar, setOpenSnackBar] = useState(false);
-  const [snackBarSeverity, setSnackBarSeverity] = useState("");
+  const [snackBarSeverity, setSnackBarSeverity] = useState("error"); // default to nothing will be complained
   const [snackBarMessage, setSnackBarMessage] = useState("");
 
   const handleSnackBarClose = () => {
