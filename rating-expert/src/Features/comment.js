@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, Paper } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
-export default function Comment({ Email, Reason, Rating, Date }) {
+export default function Comment({ userName, Reason, Rating, Date }) {
   return (
     <Paper
       sx={{
@@ -20,7 +20,7 @@ export default function Comment({ Email, Reason, Rating, Date }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {Email}
+                {userName}
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {Reason}

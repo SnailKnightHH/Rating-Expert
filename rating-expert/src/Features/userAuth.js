@@ -21,11 +21,19 @@ function useProvideAuth() {
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
   const signIn = async (email, password) => {
-    const resp = await axios.post(`${baseURL}/login`, { email, password });
+    const resp = await axios.post(`${baseURL}/login`, {
+      email,
+      password,
+      withCredentials: true,
+    });
     return resp;
   };
-  const signUp = async (email, password) => {
-    const resp = await axios.post(`${baseURL}/signup`, { email, password });
+  const signUp = async (email, password, userName) => {
+    const resp = await axios.post(`${baseURL}/signup`, {
+      email,
+      password,
+      userName,
+    });
     return resp;
   };
   const signOut = async () => {

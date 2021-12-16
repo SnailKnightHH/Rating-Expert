@@ -22,6 +22,7 @@ import Comment from "../Features/comment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useDispatch, useSelector } from "react-redux";
 import { CommentRounded } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   title: {
@@ -59,7 +60,7 @@ const useStyles = makeStyles({
 export default function InstanceDetail() {
   const classes = useStyles();
   const user = useSelector((state) => state.user.user);
-
+  console.log("userName", user);
   const [comment, setComment] = useState("");
 
   const changeComment = (event) => {
@@ -131,9 +132,9 @@ export default function InstanceDetail() {
 
   const [commentRating, setCommentRating] = useState("");
 
-  const addComment = async (comment, email, name, rating) => {
+  const addComment = async (comment, userName, name, rating) => {
     const resp = await axios.post(`${baseURL}/main/:category/createComment`, {
-      params: { comment, email, name, rating },
+      params: { comment, userName, name, rating },
     });
     console.log("before adding comment", resp);
     await fetchInstance();
@@ -167,6 +168,15 @@ export default function InstanceDetail() {
           </Typography>
           <Typography>{instanceInfo.date.split("T")[0]}</Typography>
           {customPaper(calculateRating())}
+          <Box display="flex" justifyContent="center" marginTop="2.5rem">
+            <Typography>{"Related link: "}</Typography>
+          </Box>
+          <Button
+            href={`${instanceInfo.websiteLink}`}
+            style={{ textTransform: "none" }}
+          >
+            {instanceInfo.websiteLink}
+          </Button>
           <Box display="flex" justifyContent="center" marginTop="2.5rem">
             <Typography>{"Description: "}</Typography>
           </Box>
@@ -255,7 +265,7 @@ export default function InstanceDetail() {
                 onClick={() =>
                   addComment(
                     comment,
-                    user.email,
+                    user.userName,
                     instanceInfo.name,
                     commentRating
                   )
@@ -273,8 +283,8 @@ export default function InstanceDetail() {
         </Paper>
         {instanceInfo.comments.map((comment) => (
           <Comment
-            key={comment.email + comment.date}
-            Email={comment.email}
+            key={comment.userName + comment.date}
+            userName={comment.userName}
             Reason={comment.reason}
             Rating={comment.rating}
             Date={comment.date}

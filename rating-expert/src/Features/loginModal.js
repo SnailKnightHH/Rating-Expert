@@ -42,6 +42,7 @@ export default function LoginModal({ open, handleClose }) {
   };
 
   const [values, setValues] = useState({
+    userName: "",
     email: "",
     password: "",
     showPassword: false,
@@ -110,7 +111,11 @@ export default function LoginModal({ open, handleClose }) {
 
   const handleSignUp = async () => {
     try {
-      const resp = await auth.signUp(values.email, values.password);
+      const resp = await auth.signUp(
+        values.email,
+        values.password,
+        values.userName
+      );
 
       if (resp) {
         SetIsSignUp(false);
@@ -166,6 +171,16 @@ export default function LoginModal({ open, handleClose }) {
                 </Alert>
               )}
               <Grid item>
+                {isSignUp && (
+                  <TextField
+                    fullWidth
+                    required
+                    id="outlined-required"
+                    label="User Name"
+                    placeholder="User Name"
+                    onChange={handleChange("userName")}
+                  />
+                )}
                 <TextField
                   fullWidth
                   required
