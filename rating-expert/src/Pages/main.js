@@ -12,13 +12,17 @@ import CustomCard from "../Features/customCard";
 import Camera from "../Images/Camera.jpg";
 import Gaming from "../Images/Gaming.jpg";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: 24,
     marginBottom: 24,
     fontSize: 40,
+    color: theme.palette.text.primary,
   },
-});
+  searchBar: {
+    backgroundColor: theme.palette.background.default,
+  },
+}));
 
 export default function MainPage() {
   const classes = useStyles();
@@ -59,7 +63,11 @@ export default function MainPage() {
             alignItems: "center",
             width: 450,
           }}
-          style={{ "border-radius": "30rem", marginBottom: "2rem" }}
+          className={classes.searchBar}
+          style={{
+            "border-radius": "30rem",
+            marginBottom: "2rem",
+          }}
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}

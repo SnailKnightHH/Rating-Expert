@@ -16,20 +16,19 @@ import { useSelector } from "react-redux";
 import LoginModal from "./loginModal";
 import { useAuth } from "./userAuth";
 import { useHistory } from "react-router";
+import DarkModeToggle from "./darkModeToggle";
+import { useTheme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+const useStyles = makeStyles((theme) => ({
+  text: {
+    color: theme.palette.text.primary,
+  },
+}));
 
 export default function ButtonAppBar({ children }) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = useState(null);
   const loggedIn = useSelector((state) => state.user.loggedIn);
 
@@ -99,16 +98,23 @@ export default function ButtonAppBar({ children }) {
       {loggedIn && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
     </Menu>
   );
-
+  // className={classes.root}
   return (
-    <div>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
       <LoginModal handleClose={handleClose} open={open} />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1 }}
+              className={classes.text}
+            >
               Rating Expert
             </Typography>
+
+            <DarkModeToggle />
 
             <IconButton
               size="large"
@@ -126,6 +132,7 @@ export default function ButtonAppBar({ children }) {
         {renderMenu}
       </Box>
       <Box m={5}>{children}</Box>
-    </div>
+    </Box>
   );
 }
+// 1z29r2r90418892669

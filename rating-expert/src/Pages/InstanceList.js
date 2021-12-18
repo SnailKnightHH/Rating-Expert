@@ -43,8 +43,28 @@ import subCategories from "../Constants/subCategories";
 import { selectAllInstances, fetchAllInstances } from "./instanceSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  textField: {
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.secondary,
+  },
+  root: {
+    "& .MuiFormControlLabel-label": {
+      color: theme.palette.text.primary,
+    },
+  },
+  btn: {
+    backgroundColor: theme.palette.action.active,
+  },
+  text: {
+    color: theme.palette.text.primary,
+  },
+}));
 
 export default function InstanceList() {
+  const classes = useStyles();
   const params = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -280,7 +300,7 @@ export default function InstanceList() {
     <Fragment>
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <FormControl fullWidth>
+          <FormControl fullWidth className={classes.root}>
             <InputLabel id="demo-simple-select-label">Category</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -309,6 +329,7 @@ export default function InstanceList() {
             }}
             onChange={handleSearchQuery}
             variant="outlined"
+            className={classes.textField}
           />
         </Grid>
         <Grid item xs={2}>
@@ -327,7 +348,11 @@ export default function InstanceList() {
           </ToggleButtonGroup>
         </Grid>
         <Grid item marginTop={0.5}>
-          <Button variant="contained" onClick={backToMain}>
+          <Button
+            variant="contained"
+            onClick={backToMain}
+            className={classes.btn}
+          >
             Back
           </Button>
         </Grid>
@@ -350,7 +375,7 @@ export default function InstanceList() {
       </Grid>
       <Grid container spacing={3} marginTop={3}>
         {allInstances.length === 0 && (
-          <Typography sx={{ margin: "2rem" }}>
+          <Typography sx={{ margin: "2rem" }} className={classes.text}>
             There are no {params.category} available.
           </Typography>
         )}
