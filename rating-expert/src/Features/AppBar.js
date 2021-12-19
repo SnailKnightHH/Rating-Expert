@@ -6,6 +6,8 @@ import {
   MenuItem,
   Menu,
   IconButton,
+  Button,
+  Grid,
 } from "@mui/material";
 
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -16,6 +18,7 @@ import { useSelector } from "react-redux";
 import LoginModal from "./loginModal";
 import { useAuth } from "./userAuth";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -106,21 +109,31 @@ export default function ButtonAppBar({ children }) {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Rating Expert
-            </Typography>
-
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
+            <Grid
+              container
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <AccountCircle />
-            </IconButton>
+              <Grid item>
+                <Button component={Link} to={"/main"} sx={{ color: "white" }}>
+                  Rating Expert
+                </Button>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
         {renderMenu}
