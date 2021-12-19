@@ -13,15 +13,16 @@ import {
   Autocomplete,
 } from "@mui/material";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import subCategories from "../Constants/subCategories";
 import { selectAllInstances } from "./instanceSlice";
+import { Prompt } from "react-router-dom";
 
 export default function AddInstancePage() {
-  // const nameTest = useRef();
+  const [routePromptEnabled, setRoutePromptEnabled] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [nameField, setNameField] = useState("");
   const [webLinkField, setWebLinkField] = useState("");
@@ -78,22 +79,30 @@ export default function AddInstancePage() {
   const [publishWarning, setPublishWarning] = useState(false);
   const [duplicateWarning, setDuplicateWarning] = useState(false);
 
+  const changeRoutePromptState = (boolean) => {
+    setRoutePromptEnabled(boolean);
+  };
+
   const publishOrEditInstance = () => {
+    changeRoutePromptState(false);
     if (
       !draft.name.trim() ||
       !draft.description.trim() ||
       !draft.reason.trim()
     ) {
       setPublishWarning(true);
+      changeRoutePromptState(true);
       return;
     } else {
       setPublishWarning(false);
       console.log("isEdit frontend", isEdit, draft);
-      dispatch(createInstance({ ...draft, ifEdit: isEdit }));
+
       if (allInstancesNames.includes(draft.name)) {
         setDuplicateWarning(true);
+        changeRoutePromptState(true);
       } else {
         setDuplicateWarning(false);
+        dispatch(createInstance({ ...draft, ifEdit: isEdit }));
         dispatch(changeStatusToIdle());
         history.push(`/main/${params.category}`);
       }
@@ -123,6 +132,7 @@ export default function AddInstancePage() {
   };
 
   const handleChange = (key) => (event) => {
+    changeRoutePromptState(true);
     const input = event.target.value;
 
     if (key === "rating") {
@@ -157,145 +167,152 @@ export default function AddInstancePage() {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
-      {publishWarning && (
-        <Box marginBottom={3} sx={{ width: 1 / 4 }}>
-          <Alert severity="error">Please fill out all required fields.</Alert>
-        </Box>
-      )}
-      {duplicateWarning && (
-        <Box marginBottom={3} sx={{ width: 1 / 4 }}>
-          <Alert severity="error">
-            A {params.category.slice(0, -1).toLowerCase()} with name{" "}
-            {draft.name} already exists.
-          </Alert>
-        </Box>
-      )}
-      <Box sx={{ width: 1 / 4 }} marginBottom={3}>
-        <TextField
-          required
-          id="Name"
-          label="Name"
-          fullWidth
-          onBlur={handleChange("name")}
-          onChange={perCharChange("name")}
-          value={nameField}
-          // ref={nameTest}
-          // defaultValue={nameTest.current ? nameTest.current.value : ""}
-        />
-      </Box>
-      <Box sx={{ width: 1 / 4 }} marginBottom={3}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Category</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={category}
-            label="category"
-            onChange={handleChange("sub_category")}
-          >
-            {subCategories[params.category].map((instance, index) => (
-              <MenuItem value={index}>{instance}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      <Box
-        marginTop={1}
-        sx={{
-          width: 260,
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Rating
-          name="half-rating"
-          defaultValue={0}
-          value={value}
-          max={10}
-          precision={0.5}
-          onChange={handleChange("rating")}
-          onChangeActive={(event, newHover) => {
-            setHover(newHover);
-          }}
-        />
-        {hover !== -1 && <Box sx={{ ml: 2 }}>{hover}</Box>}
-        {hover === -1 && value !== null && <Box sx={{ ml: 2 }}>{value}</Box>}
-      </Box>
-
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
-        <TextField
-          id="related weblink"
-          label="WebLink"
-          fullWidth
-          value={webLinkField}
-          onBlur={handleChange("websiteLink")}
-          onChange={perCharChange("websiteLink")}
-        />
-      </Box>
-
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
-        <TextField
-          id="Instance Description"
-          label="Description"
-          multiline
-          rows={4}
-          inputProps={{ style: { resize: "vertical" } }}
-          fullWidth
-          required
-          value={descriptionField}
-          onBlur={handleChange("description")}
-          onChange={perCharChange("description")}
-        />
-      </Box>
-
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
-        <TextField
-          id="Rating Reasoning"
-          label="Reason"
-          multiline
-          rows={4}
-          inputProps={{ style: { resize: "vertical" } }}
-          fullWidth
-          required
-          value={reasonField}
-          onBlur={handleChange("reason")}
-          onChange={perCharChange("reason")}
-        />
-      </Box>
-      <Box marginTop={6}>
-        <TextField
-          id="Instance Publish Date"
-          label="Date"
-          type="date"
-          value={isEdit ? currentDate : currentDate.toISOString().split("T")[0]}
-          onChange={handleChange("Date")}
-        />
-      </Box>
+    <Fragment>
+      <Prompt
+        when={routePromptEnabled}
+        message={(location) =>
+          "Are you sure you want to leave the page? All information entered will be lost."
+        }
+      />
       <Grid
         container
-        spacing={3}
+        direction="column"
         alignItems="center"
         justifyContent="center"
-        marginTop={3}
       >
-        <Grid item>
-          <Button variant="contained" onClick={Back}>
-            Back
-          </Button>
+        {publishWarning && (
+          <Box marginBottom={3} sx={{ width: 1 / 4 }}>
+            <Alert severity="error">Please fill out all required fields.</Alert>
+          </Box>
+        )}
+        {duplicateWarning && (
+          <Box marginBottom={3} sx={{ width: 1 / 4 }}>
+            <Alert severity="error">
+              A {params.category.slice(0, -1).toLowerCase()} with name{" "}
+              {draft.name} already exists.
+            </Alert>
+          </Box>
+        )}
+        <Box sx={{ width: 1 / 4 }} marginBottom={3}>
+          <TextField
+            required
+            id="Name"
+            label="Name"
+            fullWidth
+            onBlur={handleChange("name")}
+            onChange={perCharChange("name")}
+            value={nameField}
+            // ref={nameTest}
+            // defaultValue={nameTest.current ? nameTest.current.value : ""}
+          />
+        </Box>
+        <Box sx={{ width: 1 / 4 }} marginBottom={3}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={category}
+              label="category"
+              onChange={handleChange("sub_category")}
+            >
+              {subCategories[params.category].map((instance, index) => (
+                <MenuItem value={index}>{instance}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box
+          marginTop={1}
+          sx={{
+            width: 260,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Rating
+            name="half-rating"
+            defaultValue={0}
+            value={value}
+            max={10}
+            precision={0.5}
+            onChange={handleChange("rating")}
+            onChangeActive={(event, newHover) => {
+              setHover(newHover);
+            }}
+          />
+          {hover !== -1 && <Box sx={{ ml: 2 }}>{hover}</Box>}
+          {hover === -1 && value !== null && <Box sx={{ ml: 2 }}>{value}</Box>}
+        </Box>
+        <Box sx={{ width: 1 / 4 }} marginTop={6}>
+          <TextField
+            id="related weblink"
+            label="WebLink"
+            fullWidth
+            value={webLinkField}
+            onBlur={handleChange("websiteLink")}
+            onChange={perCharChange("websiteLink")}
+          />
+        </Box>
+        <Box sx={{ width: 1 / 4 }} marginTop={6}>
+          <TextField
+            id="Instance Description"
+            label="Description"
+            multiline
+            rows={4}
+            inputProps={{ style: { resize: "vertical" } }}
+            fullWidth
+            required
+            value={descriptionField}
+            onBlur={handleChange("description")}
+            onChange={perCharChange("description")}
+          />
+        </Box>
+        <Box sx={{ width: 1 / 4 }} marginTop={6}>
+          <TextField
+            id="Rating Reasoning"
+            label="Reason"
+            multiline
+            rows={4}
+            inputProps={{ style: { resize: "vertical" } }}
+            fullWidth
+            required
+            value={reasonField}
+            onBlur={handleChange("reason")}
+            onChange={perCharChange("reason")}
+          />
+        </Box>
+        <Box marginTop={6}>
+          <TextField
+            id="Instance Publish Date"
+            label="Date"
+            type="date"
+            value={
+              isEdit ? currentDate : currentDate.toISOString().split("T")[0]
+            }
+            onChange={handleChange("Date")}
+          />
+        </Box>
+        <Grid
+          container
+          spacing={3}
+          alignItems="center"
+          justifyContent="center"
+          marginTop={3}
+        >
+          <Grid item>
+            <Button variant="contained" onClick={Back}>
+              Back
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={publishOrEditInstance}>
+              {isEdit ? "Edit" : "Publish"}
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={publishOrEditInstance}>
-            {isEdit ? "Edit" : "Publish"}
-          </Button>
-        </Grid>
+        {/* fine tune button colors*/}
       </Grid>
-      {/* fine tune button colors*/}
-    </Grid>
+    </Fragment>
   );
 }
