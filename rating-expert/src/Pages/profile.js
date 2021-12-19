@@ -278,36 +278,40 @@ export default function Profile() {
             <Typography>Date</Typography>
           </Grid>
         </Grid>
-        {user.posts.map((post) => (
-          <Grid
-            container
-            item
-            justifyContent="space-evenly"
-            component={Button}
-            onClick={() => goToInstance(post)}
-          >
-            <Grid item xs={3}>
-              <Typography style={{ textTransform: "initial" }}>
-                {post.name}
-              </Typography>
+        {user.posts.length === 0 && (
+          <Typography>You have not posted anything yet.</Typography>
+        )}
+        {user.posts.length !== 0 &&
+          user.posts.map((post) => (
+            <Grid
+              container
+              item
+              justifyContent="space-evenly"
+              component={Button}
+              onClick={() => goToInstance(post)}
+            >
+              <Grid item xs={3}>
+                <Typography style={{ textTransform: "initial" }}>
+                  {post.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography style={{ textTransform: "initial" }}>
+                  {post.category}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography style={{ textTransform: "initial" }}>
+                  {post.rating}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography style={{ textTransform: "initial" }}>
+                  {dateFormat(post.date)}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={3}>
-              <Typography style={{ textTransform: "initial" }}>
-                {post.category}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography style={{ textTransform: "initial" }}>
-                {post.rating}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography style={{ textTransform: "initial" }}>
-                {dateFormat(post.date)}
-              </Typography>
-            </Grid>
-          </Grid>
-        ))}
+          ))}
         <Button
           variant="contained"
           onClick={() => {

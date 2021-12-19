@@ -127,6 +127,10 @@ export default function LoginModal({ open, handleClose }) {
         setSnackBarSeverity("error");
         setSnackBarMessage("This email has been registered already.");
         setOpenSnackBar(true);
+      } else if (err.message === "Request failed with status code 422") {
+        setSnackBarSeverity("error");
+        setSnackBarMessage("Invalid Email.");
+        setOpenSnackBar(true);
       } else {
         setSnackBarSeverity("error");
         setSnackBarMessage("Registration failed.");
