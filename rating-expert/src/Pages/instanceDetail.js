@@ -60,7 +60,7 @@ const useStyles = makeStyles({
 export default function InstanceDetail() {
   const classes = useStyles();
   const user = useSelector((state) => state.user.user);
-  console.log("userName", user);
+
   const [comment, setComment] = useState("");
 
   const changeComment = (event) => {
@@ -106,6 +106,12 @@ export default function InstanceDetail() {
 
   const paramsHook = useParams();
   const history = useHistory();
+
+  const EditInstance = () => {
+    localStorage.setItem("instanceDetail", JSON.stringify(instanceInfo));
+    history.push(`/main/${paramsHook.category}/Create`);
+  };
+
   const [isLoading, setIsLoading] = useState(true);
   const [instanceInfo, setInstanceInfo] = useState(null);
 
@@ -193,8 +199,8 @@ export default function InstanceDetail() {
 
         <Grid
           container
-          direction="column"
-          justifyContent="stretch"
+          direction="row"
+          justifyContent="center"
           alignItems="center"
         >
           <Grid item>
@@ -202,6 +208,17 @@ export default function InstanceDetail() {
               Back
             </Button>
           </Grid>
+          {user !== null && instanceInfo.userName === user.userName && (
+            <Grid item>
+              <Button
+                variant="contained"
+                className={classes.back}
+                onClick={EditInstance}
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
         </Grid>
 
         <Paper

@@ -27,10 +27,11 @@ const initialState = instancesAdapter.getInitialState({
 
 export const createInstance = createAsyncThunk(
   "instances/createInstance",
-  async (instance) => {
+  async (instance, isEdit) => {
     console.log("in createInstance");
     await axios.post(`${baseURL}/main/:category/createInstance`, {
       ...instance,
+      isEdit,
     });
     return instance;
   }

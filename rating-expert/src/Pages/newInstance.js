@@ -13,13 +13,19 @@ import {
   Autocomplete,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import subCategories from "../Constants/subCategories";
 
 export default function AddInstancePage() {
+  // const nameTest = useRef();
+  const [isEdit, setIsEdit] = useState(false);
+  const [nameField, setNameField] = useState("");
+  const [webLinkField, setWebLinkField] = useState("");
+  const [descriptionField, setDescriptionField] = useState("");
+  const [reasonField, setReasonField] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
@@ -44,10 +50,31 @@ export default function AddInstancePage() {
     user,
   };
 
+  useEffect(() => {
+    const instanceInfo = JSON.parse(localStorage.getItem("instanceDetail"));
+    console.log("in useeffct", instanceInfo);
+    if (instanceInfo) {
+      setNameField(instanceInfo.name);
+      setWebLinkField(instanceInfo.websiteLink);
+      setDescriptionField(instanceInfo.description);
+      setReasonField(instanceInfo.reason);
+      setCategory(
+        subCategories[instanceInfo.category].findIndex(
+          (element) => element === instanceInfo.sub_category
+        )
+      );
+      setIsEdit(true);
+      setCurrentDate(instanceInfo.date.split("T")[0]);
+      setValue(instanceInfo.rating);
+      setDraft({ ...instanceInfo });
+      localStorage.removeItem("instanceDetail");
+    }
+  }, []);
+
   const [draft, setDraft] = useState(instanceDraft);
   const [publishWarning, setPublishWarning] = useState(false);
 
-  const publishInstance = () => {
+  const publishOrEditInstance = () => {
     if (
       !draft.name.trim() ||
       !draft.description.trim() ||
@@ -57,8 +84,7 @@ export default function AddInstancePage() {
       return;
     } else {
       setPublishWarning(false);
-      dispatch(createInstance(draft));
-
+      dispatch(createInstance(draft, isEdit));
       dispatch(changeStatusToIdle());
       history.push(`/main/${params.category}`);
       console.log("publish successful", draft);
@@ -73,21 +99,37 @@ export default function AddInstancePage() {
     return Date.parse(ISODate); // must be serializable
   };
 
+  const perCharChange = (key) => (event) => {
+    const input = event.target.value;
+
+    if (key === "name") {
+      setNameField(input);
+    } else if (key === "websiteLink") {
+      setWebLinkField(input);
+    } else if (key === "description") {
+      setDescriptionField(input);
+    } else if (key === "reason") {
+      setReasonField(input);
+    }
+  };
+
   const handleChange = (key) => (event) => {
+    const input = event.target.value;
+
     if (key === "rating") {
-      setValue(event.target.value);
+      setValue(input);
     }
     if (key === "sub_category") {
-      setCategory(event.target.value);
+      setCategory(input);
       setDraft({
         ...draft,
-        [key]: subCategories[params.category][event.target.value],
+        [key]: subCategories[params.category][input],
       });
       return;
     }
     if (key === "Date") {
-      console.log(event.target.value);
-      const formattedDate = DateConversion(event.target.value);
+      console.log(input);
+      const formattedDate = DateConversion(input);
       console.log("formattedDate", formattedDate);
       setDraft({
         ...draft,
@@ -98,7 +140,7 @@ export default function AddInstancePage() {
 
     setDraft({
       ...draft,
-      [key]: event.target.value,
+      [key]: input,
     });
   };
 
@@ -125,6 +167,10 @@ export default function AddInstancePage() {
           label="Name"
           fullWidth
           onBlur={handleChange("name")}
+          onChange={perCharChange("name")}
+          value={nameField}
+          // ref={nameTest}
+          // defaultValue={nameTest.current ? nameTest.current.value : ""}
         />
       </Box>
       <Box sx={{ width: 1 / 4 }} marginBottom={3}>
@@ -154,6 +200,7 @@ export default function AddInstancePage() {
         <Rating
           name="half-rating"
           defaultValue={0}
+          value={value}
           max={10}
           precision={0.5}
           onChange={handleChange("rating")}
@@ -170,7 +217,9 @@ export default function AddInstancePage() {
           id="related weblink"
           label="WebLink"
           fullWidth
+          value={webLinkField}
           onBlur={handleChange("websiteLink")}
+          onChange={perCharChange("websiteLink")}
         />
       </Box>
 
@@ -183,7 +232,9 @@ export default function AddInstancePage() {
           inputProps={{ style: { resize: "vertical" } }}
           fullWidth
           required
+          value={descriptionField}
           onBlur={handleChange("description")}
+          onChange={perCharChange("description")}
         />
       </Box>
 
@@ -196,7 +247,9 @@ export default function AddInstancePage() {
           inputProps={{ style: { resize: "vertical" } }}
           fullWidth
           required
+          value={reasonField}
           onBlur={handleChange("reason")}
+          onChange={perCharChange("reason")}
         />
       </Box>
       <Box marginTop={6}>
@@ -204,7 +257,7 @@ export default function AddInstancePage() {
           id="Instance Publish Date"
           label="Date"
           type="date"
-          value={currentDate.toISOString().split("T")[0]}
+          value={isEdit ? currentDate : currentDate.toISOString().split("T")[0]}
           onChange={handleChange("Date")}
         />
       </Box>
@@ -221,13 +274,12 @@ export default function AddInstancePage() {
           </Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={publishInstance}>
-            Publish
+          <Button variant="contained" onClick={publishOrEditInstance}>
+            {isEdit ? "Edit" : "Publish"}
           </Button>
         </Grid>
       </Grid>
       {/* fine tune button colors*/}
-      {/* Conditionally render list of user reasonings */}
     </Grid>
   );
 }
