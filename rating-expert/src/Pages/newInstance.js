@@ -18,6 +18,7 @@ import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import subCategories from "../Constants/subCategories";
+import { selectAllInstances } from "./instanceSlice";
 
 export default function AddInstancePage() {
   // const nameTest = useRef();
@@ -34,6 +35,9 @@ export default function AddInstancePage() {
   const history = useHistory();
 
   const user = useSelector((state) => state.user.user);
+  const allInstancesNames = useSelector(selectAllInstances).map(
+    (instance) => instance.name
+  );
 
   const [category, setCategory] = useState("");
 
@@ -52,7 +56,6 @@ export default function AddInstancePage() {
 
   useEffect(() => {
     const instanceInfo = JSON.parse(localStorage.getItem("instanceDetail"));
-    console.log("in useeffct", instanceInfo);
     if (instanceInfo) {
       setNameField(instanceInfo.name);
       setWebLinkField(instanceInfo.websiteLink);
@@ -66,13 +69,14 @@ export default function AddInstancePage() {
       setIsEdit(true);
       setCurrentDate(instanceInfo.date.split("T")[0]);
       setValue(instanceInfo.rating);
-      setDraft({ ...instanceInfo });
+      setDraft({ ...instanceInfo, oldName: instanceInfo.name });
       localStorage.removeItem("instanceDetail");
     }
   }, []);
 
   const [draft, setDraft] = useState(instanceDraft);
   const [publishWarning, setPublishWarning] = useState(false);
+  const [duplicateWarning, setDuplicateWarning] = useState(false);
 
   const publishOrEditInstance = () => {
     if (
@@ -84,10 +88,15 @@ export default function AddInstancePage() {
       return;
     } else {
       setPublishWarning(false);
-      dispatch(createInstance(draft, isEdit));
-      dispatch(changeStatusToIdle());
-      history.push(`/main/${params.category}`);
-      console.log("publish successful", draft);
+      console.log("isEdit frontend", isEdit, draft);
+      dispatch(createInstance({ ...draft, ifEdit: isEdit }));
+      if (allInstancesNames.includes(draft.name)) {
+        setDuplicateWarning(true);
+      } else {
+        setDuplicateWarning(false);
+        dispatch(changeStatusToIdle());
+        history.push(`/main/${params.category}`);
+      }
     }
   };
 
@@ -95,7 +104,7 @@ export default function AddInstancePage() {
     const [year, month, day] = DateParam.split("-");
     const ISODate = new Date(`${month} ${day}, ${year} 00:00:00`);
     setCurrentDate(ISODate);
-    console.log("Date.parse(ISODate)", Date.parse(ISODate));
+
     return Date.parse(ISODate); // must be serializable
   };
 
@@ -128,9 +137,8 @@ export default function AddInstancePage() {
       return;
     }
     if (key === "Date") {
-      console.log(input);
       const formattedDate = DateConversion(input);
-      console.log("formattedDate", formattedDate);
+
       setDraft({
         ...draft,
         [key]: formattedDate,
@@ -158,6 +166,14 @@ export default function AddInstancePage() {
       {publishWarning && (
         <Box marginBottom={3} sx={{ width: 1 / 4 }}>
           <Alert severity="error">Please fill out all required fields.</Alert>
+        </Box>
+      )}
+      {duplicateWarning && (
+        <Box marginBottom={3} sx={{ width: 1 / 4 }}>
+          <Alert severity="error">
+            A {params.category.slice(0, -1).toLowerCase()} with name{" "}
+            {draft.name} already exists.
+          </Alert>
         </Box>
       )}
       <Box sx={{ width: 1 / 4 }} marginBottom={3}>

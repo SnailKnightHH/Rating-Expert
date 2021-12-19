@@ -94,7 +94,6 @@ export default function LoginModal({ open, handleClose }) {
   const handleSignIn = async () => {
     try {
       const resp = await auth.signIn(values.email, values.password);
-      console.log(resp);
       if (resp.data) {
         dispatch(signInUser(resp.data));
         setSnackBarSeverity("success");

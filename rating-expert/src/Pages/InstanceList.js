@@ -75,6 +75,7 @@ export default function InstanceList() {
       else
         return instance.name.toLowerCase().includes(query.trim().toLowerCase());
     });
+  console.log("allInstances", allInstances);
 
   const [viewMode, setViewMode] = useState("Grid");
 
@@ -90,12 +91,9 @@ export default function InstanceList() {
   const instancesStatus = useSelector((state) => state.instances.status);
 
   useEffect(() => {
-    console.log("instancesStatus", instancesStatus);
     if (instancesStatus === "idle") {
       dispatch(fetchAllInstances("1")); // temp user id
     }
-
-    console.log("use effect", allInstances);
   }, [instancesStatus, allInstances, dispatch]);
 
   function TablePaginationActions(props) {
@@ -175,7 +173,6 @@ export default function InstanceList() {
   };
 
   const InstancesList = () => {
-    console.log("allInstances", allInstances);
     if (viewMode === "Grid") {
       return allInstances.map((instance) => (
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
