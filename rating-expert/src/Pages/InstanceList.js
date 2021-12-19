@@ -62,6 +62,7 @@ export default function InstanceList() {
     setQuery(event.target.value);
   };
 
+  const unfilteredInstancesLength = useSelector(selectAllInstances).length;
   const allInstances = useSelector(selectAllInstances)
     .filter((instance) => instance.category === params.category) // categories filter
     .filter((instance) => {
@@ -345,12 +346,17 @@ export default function InstanceList() {
           )}
         </Grid>
       </Grid>
+      {allInstances.length === 0 ? (
+        <Typography sx={{ marginTop: "2rem" }}>
+          There are no {params.category.toLowerCase()} available.
+        </Typography>
+      ) : (
+        <Typography sx={{ marginTop: "2rem" }}>
+          {allInstances.length} of {unfilteredInstancesLength}{" "}
+          {params.category.toLowerCase()} available.
+        </Typography>
+      )}
       <Grid container spacing={3} marginTop={3}>
-        {allInstances.length === 0 && (
-          <Typography sx={{ margin: "2rem" }}>
-            There are no {params.category} available.
-          </Typography>
-        )}
         {allInstances.length !== 0 && <InstancesList />}
       </Grid>
     </Fragment>
