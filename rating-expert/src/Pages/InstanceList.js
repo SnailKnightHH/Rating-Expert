@@ -62,8 +62,9 @@ export default function InstanceList() {
     setQuery(event.target.value);
   };
 
-  const unfilteredInstancesLength = useSelector(selectAllInstances).length;
-  const allInstances = useSelector(selectAllInstances)
+  const unfilteredAllInstances = useSelector(selectAllInstances);
+  const unfilteredInstancesLength = unfilteredAllInstances.length;
+  const allInstances = unfilteredAllInstances
     .filter((instance) => instance.category === params.category) // categories filter
     .filter((instance) => {
       // sub categories filter
