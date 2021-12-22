@@ -1,6 +1,5 @@
 import {
   CardActionArea,
-  CardHeader,
   Typography,
   Card,
   CardContent,

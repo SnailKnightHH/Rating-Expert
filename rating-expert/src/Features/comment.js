@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Paper } from "@mui/material";
+import { Grid, Typography, Paper } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 export default function Comment({ userName, Reason, Rating, Date }) {

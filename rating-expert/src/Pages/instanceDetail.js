@@ -20,9 +20,8 @@ import axios from "axios";
 import { baseURL } from "../Constants/constants";
 import Comment from "../Features/comment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useDispatch, useSelector } from "react-redux";
-import { CommentRounded } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const useStyles = makeStyles({
   title: {

@@ -1,5 +1,4 @@
 import {
-  Typography,
   Toolbar,
   AppBar,
   Box,
@@ -23,18 +22,6 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { signOutUser } from "../Pages/userSlice";
 import { useDispatch } from "react-redux";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 export default function ButtonAppBar({ children }) {
   const [openSnackBar, setOpenSnackBar] = useState(false);
