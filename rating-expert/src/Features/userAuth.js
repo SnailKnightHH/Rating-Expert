@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect, useContext, createContext } from "react";
+import { useState, useContext, createContext } from "react";
 import { baseURL } from "../Constants/constants";
 
 const authContext = createContext();

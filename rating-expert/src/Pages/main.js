@@ -59,7 +59,7 @@ export default function MainPage() {
             alignItems: "center",
             width: 450,
           }}
-          style={{ "border-radius": "30rem", marginBottom: "2rem" }}
+          style={{ borderRadius: "30rem", marginBottom: "2rem" }}
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
@@ -74,7 +74,7 @@ export default function MainPage() {
       </Box>
       <Grid container spacing={3}>
         {allCategories.map((category) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={category.title}>
             <CustomCard
               img={category.img}
               title={category.title}

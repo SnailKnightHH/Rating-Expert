@@ -9,10 +9,9 @@ import {
   MenuItem,
   FormControl,
   Select,
-  Autocomplete,
 } from "@mui/material";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { createInstance, changeStatusToIdle } from "./instanceSlice";
 import { useDispatch, useSelector } from "react-redux";

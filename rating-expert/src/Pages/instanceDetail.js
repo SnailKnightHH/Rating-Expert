@@ -22,7 +22,6 @@ import Comment from "../Features/comment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useSelector } from "react-redux";
 
-
 const useStyles = makeStyles({
   title: {
     marginTop: 24,

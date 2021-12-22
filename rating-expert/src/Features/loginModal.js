@@ -82,7 +82,7 @@ export default function LoginModal({ open, handleClose }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackBar}
         onClose={handleSnackBarClose}
-        key={"bottom" + "center"}
+        key={"bottom_center"}
       >
         <Alert onClose={handleSnackBarClose} severity={snackBarSeverity}>
           {snackBarMessage}

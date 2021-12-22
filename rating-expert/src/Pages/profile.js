@@ -120,7 +120,7 @@ export default function Profile() {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackBar}
         onClose={handleSnackBarClose}
-        key={"bottom" + "center"}
+        key={"bottom_center"}
       >
         <Alert onClose={handleSnackBarClose} severity={snackBarSeverity}>
           {snackBarMessage}
@@ -260,10 +260,13 @@ export default function Profile() {
           container
           item
           justifyContent="space-evenly"
-          style={{ marginTop: "1rem" }}
+          style={{
+            marginTop: "1rem",
+            color: "black",
+            textTransform: "initial",
+          }}
           component={Button}
           disabled
-          style={{ color: "black", textTransform: "initial" }}
         >
           <Grid item xs={3}>
             <Typography>Name</Typography>

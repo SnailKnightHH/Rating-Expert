@@ -10,9 +10,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Visibility from "@mui/icons-material/Visibility";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -40,7 +38,7 @@ export default function ButtonAppBar({ children }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackBar}
         onClose={handleSnackBarClose}
-        key={"bottom" + "center"}
+        key={"bottom_center"}
       >
         <Alert onClose={handleSnackBarClose} severity={snackBarSeverity}>
           {snackBarMessage}
