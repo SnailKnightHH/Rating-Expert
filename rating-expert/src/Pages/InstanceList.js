@@ -77,7 +77,6 @@ export default function InstanceList() {
       else
         return instance.name.toLowerCase().includes(query.trim().toLowerCase());
     });
-  console.log("allInstances", allInstances);
 
   const [viewMode, setViewMode] = useState("Grid");
 

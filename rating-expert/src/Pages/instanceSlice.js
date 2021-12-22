@@ -28,8 +28,6 @@ const initialState = instancesAdapter.getInitialState({
 export const createInstance = createAsyncThunk(
   "instances/createInstance",
   async (instance) => {
-    console.log("in createInstance");
-
     await axios.post(`${baseURL}/main/:category/createInstance`, {
       ...instance,
     });
@@ -62,7 +60,6 @@ const instancesSlice = createSlice({
     [createInstance.rejected]: (state, action) => errorReponse(state, action),
     [createInstance.fulfilled]: (state, action) => {
       const instance = action.payload;
-      console.log("instance redux", instance);
       instancesAdapter.upsertOne(state, instance);
       state.status = "succeeded";
     },

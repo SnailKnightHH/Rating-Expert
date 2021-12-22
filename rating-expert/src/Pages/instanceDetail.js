@@ -125,7 +125,6 @@ export default function InstanceDetail() {
       setInstanceInfo(resp.data);
       setIsLoading(false);
     }
-    console.log("instanceInfo", resp.data);
   };
 
   useEffect(() => {
@@ -142,9 +141,7 @@ export default function InstanceDetail() {
     const resp = await axios.post(`${baseURL}/main/:category/createComment`, {
       params: { comment, userName, name, rating },
     });
-    console.log("before adding comment", resp);
     await fetchInstance();
-    console.log("end of adding comment");
     setCommentRating("");
     setComment("");
   };

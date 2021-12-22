@@ -88,7 +88,6 @@ export default function AddInstancePage() {
       return;
     } else {
       setPublishWarning(false);
-      console.log("isEdit frontend", isEdit, draft);
       dispatch(createInstance({ ...draft, ifEdit: isEdit }));
       if (allInstancesNames.includes(draft.name)) {
         setDuplicateWarning(true);
@@ -164,19 +163,19 @@ export default function AddInstancePage() {
       justifyContent="center"
     >
       {publishWarning && (
-        <Box marginBottom={3} sx={{ width: 1 / 4 }}>
+        <Box marginBottom={3} sx={{ width: 1 / 3 }}>
           <Alert severity="error">Please fill out all required fields.</Alert>
         </Box>
       )}
       {duplicateWarning && (
-        <Box marginBottom={3} sx={{ width: 1 / 4 }}>
+        <Box marginBottom={3} sx={{ width: 1 / 3 }}>
           <Alert severity="error">
             A {params.category.slice(0, -1).toLowerCase()} with name{" "}
             {draft.name} already exists.
           </Alert>
         </Box>
       )}
-      <Box sx={{ width: 1 / 4 }} marginBottom={3}>
+      <Box sx={{ width: 1 / 3 }} marginBottom={3}>
         <TextField
           required
           id="Name"
@@ -189,7 +188,7 @@ export default function AddInstancePage() {
           // defaultValue={nameTest.current ? nameTest.current.value : ""}
         />
       </Box>
-      <Box sx={{ width: 1 / 4 }} marginBottom={3}>
+      <Box sx={{ width: 1 / 3 }} marginBottom={3}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Category</InputLabel>
           <Select
@@ -228,7 +227,7 @@ export default function AddInstancePage() {
         {hover === -1 && value !== null && <Box sx={{ ml: 2 }}>{value}</Box>}
       </Box>
 
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
+      <Box sx={{ width: 1 / 3 }} marginTop={6}>
         <TextField
           id="related weblink"
           label="WebLink"
@@ -239,7 +238,7 @@ export default function AddInstancePage() {
         />
       </Box>
 
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
+      <Box sx={{ width: 1 / 3 }} marginTop={6}>
         <TextField
           id="Instance Description"
           label="Description"
@@ -254,7 +253,7 @@ export default function AddInstancePage() {
         />
       </Box>
 
-      <Box sx={{ width: 1 / 4 }} marginTop={6}>
+      <Box sx={{ width: 1 / 3 }} marginTop={6}>
         <TextField
           id="Rating Reasoning"
           label="Reason"

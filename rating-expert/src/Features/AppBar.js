@@ -8,6 +8,8 @@ import {
   IconButton,
   Button,
   Grid,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -19,6 +21,8 @@ import LoginModal from "./loginModal";
 import { useAuth } from "./userAuth";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { signOutUser } from "../Pages/userSlice";
+import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -33,6 +37,31 @@ const style = {
 };
 
 export default function ButtonAppBar({ children }) {
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarSeverity, setSnackBarSeverity] = useState("error"); // default to nothing will be complained
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+
+  const handleSnackBarClose = () => {
+    setOpenSnackBar(false);
+  };
+
+  const SnackBarAlert = () => {
+    return (
+      // somehow only use snackbar (without alert) overrides severity and message
+      <Snackbar
+        autoHideDuration={5000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackBar}
+        onClose={handleSnackBarClose}
+        key={"bottom" + "center"}
+      >
+        <Alert onClose={handleSnackBarClose} severity={snackBarSeverity}>
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
+    );
+  };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const loggedIn = useSelector((state) => state.user.loggedIn);
 
@@ -41,6 +70,7 @@ export default function ButtonAppBar({ children }) {
   const handleClose = () => setOpen(false);
 
   const auth = useAuth();
+  const dispatch = useDispatch();
 
   const history = useHistory();
   const goToProfile = () => {
@@ -53,18 +83,18 @@ export default function ButtonAppBar({ children }) {
   const handleLogout = async () => {
     try {
       const resp = await auth.signOut();
-      // console.log(resp);
-      // if (resp.data) {
-      //   dispatch(signInUser(resp.data));
-      //   setSnackBarSeverity("success");
-      //   setSnackBarMessage("Welcome Back rating expert!");
-      //   setOpenSnackBar(true);
-      //   handleClose();
-      // } else {
-      //   setValid(false);
-      // }
+      if (resp.data === "Logout successfully") {
+        dispatch(signOutUser());
+        setSnackBarSeverity("success");
+        setSnackBarMessage("Sign out successful");
+        setOpenSnackBar(true);
+      } else {
+        setSnackBarSeverity("error");
+        setSnackBarMessage("Sign out failed");
+        setOpenSnackBar(true);
+      }
     } catch (err) {
-      // setValid(false);
+      console.log(err);
     }
   };
 
@@ -105,6 +135,7 @@ export default function ButtonAppBar({ children }) {
 
   return (
     <div>
+      <SnackBarAlert />
       <LoginModal handleClose={handleClose} open={open} />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
