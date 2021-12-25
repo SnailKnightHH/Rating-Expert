@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useContext, createContext } from "react";
+import { useContext, createContext } from "react";
 import { baseURL } from "../Constants/constants";
 
 const authContext = createContext();
@@ -14,8 +14,6 @@ export const useAuth = () => {
 };
 
 function useProvideAuth() {
-  const [user, setUser] = useState(null);
-
   const signIn = async (email, password) => {
     const resp = await axios.post(`${baseURL}/login`, {
       email,
@@ -38,7 +36,6 @@ function useProvideAuth() {
   };
 
   return {
-    user,
     signIn,
     signUp,
     signOut,

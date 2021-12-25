@@ -15,7 +15,7 @@ import { makeStyles } from "@mui/styles";
 
 import { useParams } from "react-router";
 import { useHistory } from "react-router";
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useCallback } from "react";
 import axios from "axios";
 import { baseURL } from "../Constants/constants";
 import Comment from "../Features/comment";
@@ -113,7 +113,7 @@ export default function InstanceDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [instanceInfo, setInstanceInfo] = useState(null);
 
-  const fetchInstance = async () => {
+  const fetchInstance = useCallback(async () => {
     const resourcePath = `${baseURL}/main/:category/${paramsHook.name}`;
     const resp = await axios.get(resourcePath, {
       params: { name: paramsHook.name },
@@ -123,11 +123,11 @@ export default function InstanceDetail() {
       setInstanceInfo(resp.data);
       setIsLoading(false);
     }
-  };
+  }, [setInstanceInfo, setIsLoading, paramsHook.name]);
 
   useEffect(() => {
     fetchInstance();
-  }, []);
+  }, [fetchInstance]);
 
   const Back = () => {
     history.goBack();
@@ -136,7 +136,7 @@ export default function InstanceDetail() {
   const [commentRating, setCommentRating] = useState("");
 
   const addComment = async (comment, userName, name, rating) => {
-    const resp = await axios.post(`${baseURL}/main/:category/createComment`, {
+    await axios.post(`${baseURL}/main/:category/createComment`, {
       params: { comment, userName, name, rating },
     });
     await fetchInstance();

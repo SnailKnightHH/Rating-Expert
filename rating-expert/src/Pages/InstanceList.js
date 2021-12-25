@@ -159,7 +159,7 @@ export default function InstanceList() {
   }
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 10;
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - allInstances.length) : 0;
@@ -175,7 +175,7 @@ export default function InstanceList() {
   const InstancesList = () => {
     if (viewMode === "Grid") {
       return allInstances.map((instance) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={instance.name}>
           <Card>
             <CardActionArea
               sx={{ minHeight: "8rem" }}
@@ -288,7 +288,9 @@ export default function InstanceList() {
               onChange={handleSubCategoryChange}
             >
               {instanceSubCategory.map((instance, index) => (
-                <MenuItem value={index}>{instance}</MenuItem>
+                <MenuItem value={index} key={index}>
+                  {instance}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
