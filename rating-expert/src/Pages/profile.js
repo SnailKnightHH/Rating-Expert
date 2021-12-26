@@ -310,7 +310,7 @@ export default function Profile() {
               </Grid>
               <Grid item xs={3}>
                 <Typography style={{ textTransform: "initial" }}>
-                  {dateFormat(post.date)}
+                  {post.date}
                 </Typography>
               </Grid>
             </Grid>
