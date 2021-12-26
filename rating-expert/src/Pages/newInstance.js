@@ -52,6 +52,10 @@ export default function AddInstancePage() {
     user,
   };
 
+  const [draft, setDraft] = useState(instanceDraft);
+  const [publishWarning, setPublishWarning] = useState(false);
+  const [duplicateWarning, setDuplicateWarning] = useState(false);
+
   useEffect(() => {
     const instanceInfo = JSON.parse(localStorage.getItem("instanceDetail"));
     if (instanceInfo) {
@@ -71,10 +75,6 @@ export default function AddInstancePage() {
       localStorage.removeItem("instanceDetail");
     }
   }, []);
-
-  const [draft, setDraft] = useState(instanceDraft);
-  const [publishWarning, setPublishWarning] = useState(false);
-  const [duplicateWarning, setDuplicateWarning] = useState(false);
 
   const publishOrEditInstance = () => {
     if (
@@ -133,7 +133,7 @@ export default function AddInstancePage() {
       });
       return;
     }
-    if (key === "Date") {
+    if (key === "date") {
       const formattedDate = DateConversion(input);
 
       setDraft({
@@ -182,8 +182,6 @@ export default function AddInstancePage() {
           onBlur={handleChange("name")}
           onChange={perCharChange("name")}
           value={nameField}
-          // ref={nameTest}
-          // defaultValue={nameTest.current ? nameTest.current.value : ""}
         />
       </Box>
       <Box sx={{ width: 1 / 3 }} marginBottom={3}>
@@ -271,7 +269,7 @@ export default function AddInstancePage() {
           label="Date"
           type="date"
           value={isEdit ? currentDate : currentDate.toISOString().split("T")[0]}
-          onChange={handleChange("Date")}
+          onChange={handleChange("date")}
         />
       </Box>
       <Grid
@@ -292,7 +290,6 @@ export default function AddInstancePage() {
           </Button>
         </Grid>
       </Grid>
-      {/* fine tune button colors*/}
     </Grid>
   );
 }
