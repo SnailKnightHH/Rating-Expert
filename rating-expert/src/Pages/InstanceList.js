@@ -62,7 +62,9 @@ export default function InstanceList() {
   };
 
   const unfilteredAllInstances = useSelector(selectAllInstances);
-  const unfilteredInstancesLength = unfilteredAllInstances.length;
+  const unfilteredInstancesLength = unfilteredAllInstances.filter(
+    (instance) => instance.category === params.category
+  ).length;
   const allInstances = unfilteredAllInstances
     .filter((instance) => instance.category === params.category) // categories filter
     .filter((instance) => {
