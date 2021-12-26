@@ -9,8 +9,15 @@ import Box from "@mui/material/Box";
 
 import React, { useState } from "react";
 import CustomCard from "../Features/customCard";
-import Camera from "../Images/Camera.jpg";
-import Gaming from "../Images/Gaming.jpg";
+import Movies from "../Images/Movies.jpg";
+import Games from "../Images/Games.jpg";
+import Phones from "../Images/Phones.jpg";
+import Tourism from "../Images/Tourism.jpg";
+import Schools from "../Images/Schools.jpg";
+import Restaurants from "../Images/Restaurants.jpg";
+import Animes from "../Images/Animes.jpg";
+import TVSeries from "../Images/TVSeries.jpg";
+import Cars from "../Images/Cars.jpg";
 
 const useStyles = makeStyles({
   title: {
@@ -20,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MainPage() {
+const MainPage = () => {
   const classes = useStyles();
   const [query, setQuery] = useState("");
 
@@ -31,11 +38,39 @@ export default function MainPage() {
   const allCategories = [
     {
       title: "Movies",
-      img: Camera,
+      img: Movies,
     },
     {
       title: "Games",
-      img: Gaming,
+      img: Games,
+    },
+    {
+      title: "TV Series",
+      img: TVSeries,
+    },
+    {
+      title: "Animes",
+      img: Animes,
+    },
+    {
+      title: "Restaurants",
+      img: Restaurants,
+    },
+    {
+      title: "Tourist Sites",
+      img: Tourism,
+    },
+    {
+      title: "Phones",
+      img: Phones,
+    },
+    {
+      title: "Schools",
+      img: Schools,
+    },
+    {
+      title: "Cars",
+      img: Cars,
     },
   ].filter((category) => {
     if (query.trim() === "") return true;
@@ -85,4 +120,6 @@ export default function MainPage() {
       </Grid>
     </React.Fragment>
   );
-}
+};
+
+export default React.memo(MainPage);
